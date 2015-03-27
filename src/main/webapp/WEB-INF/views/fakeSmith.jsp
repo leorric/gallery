@@ -1,4 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -115,21 +118,17 @@ String imageBasePath = basePath + "/images/";
     </div>
     
     <div class="leftBody">
+    	<c:forEach items="${worksList}" var="works">
+    	
 	    <div class="article">
-	    	<div class="description">art1</div>
+	    	<div class="description"> <c:out value="${works.title}"/> </div>
 	    	<div class="photo">
-	  	  		<img src="<%=imageBasePath%>laker.jpg"/>
+	  	  		<img src="<%=imageBasePath%>${works.imageurl}" />
 	  	  	</div>
-	  	  	<div class="description">insert any text here</div>
+	  	  	<div class="description"><c:out value="${works.description}"/></div>
 	    </div>
-	    
-	     <div class="article">
-	     	<div class="description">art2</div>
-	    	<div class="photo">
-	  	  		<img src="<%=imageBasePath%>east.jpg"/>
-	  	  	</div>
-	  	  	<div class="description">insert any text here</div>
-	    </div>
+	    </c:forEach>
+	     
     </div>
     <div class="rightBody">
 	    <div class="category">
