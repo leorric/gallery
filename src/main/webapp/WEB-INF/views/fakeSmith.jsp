@@ -5,7 +5,6 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-System.out.println(path);
 String imageBasePath = basePath + "/images/";
 %>
 
@@ -104,19 +103,8 @@ String imageBasePath = basePath + "/images/";
   </head>
   
   <body>
-  	<div class="title">
-  		蛙say作品站22
-  	</div>
-  	
-  	<div class="center" >
-    <ul>
-    	<li><a href="#">HOME</a></li>
-    	<li><a href="#">MY WORK</a></li>
-    	<li><a href="#">ABOUT ME</a></li>
-    	<li><a href="#">CONTACT ME</a></li>
-    </ul>
-    </div>
-    
+    <%@ include file="common/header.jsp"%>
+   
     <div class="leftBody">
     	<c:forEach items="${worksList}" var="works">
     	

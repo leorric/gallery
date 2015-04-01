@@ -26,7 +26,6 @@ public class HomeController {
 	@RequestMapping(method=GET)
 	public String home(Model model) {
 		List<Works> list = worksService.selectByExample(null);
-		System.out.println(list.size());
 		model.addAttribute(list);
 		return "fakeSmith";
 	}
