@@ -2,22 +2,19 @@ package com.utopia.gallery.web;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.utopia.gallery.model.Works;
-import com.utopia.gallery.model.WorksJson;
 import com.utopia.gallery.service.WorksService;
 
 @Controller
@@ -45,7 +42,13 @@ public class WorksController {
 //		map.put("list", list2);
 		//JSONArray jsonArray = JSONArray.fromObject(list);
 		JSONObject jsonObj = JSONObject.fromObject(map);
-		System.out.println("json:"+jsonObj);
+		//System.out.println("json:"+jsonObj);
 		return jsonObj;
+	}
+	
+	@RequestMapping(value="/editWorks",method=POST)
+	public @ResponseBody Object editWorks(@RequestBody Works works) {
+		System.out.println("edit works:");
+		return listWorks();
 	}
 }
