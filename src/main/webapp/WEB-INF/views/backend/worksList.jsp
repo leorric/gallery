@@ -1,8 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf8"%>
 <%
-String path = request.getContextPath();
+String path = request.getContextPath(); // path=/gallery
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-System.out.println(path);
 String imageBasePath = basePath + "/images/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
@@ -21,7 +20,7 @@ String imageBasePath = basePath + "/images/";
 	  <script type="text/javascript" src="<%=basePath%>/script/jquery.jqGrid.js"></script>
 	  <script type="text/javascript" src="<%=basePath%>/script/grid.celledit.js"></script>
 	  <script type="text/javascript" src="<%=basePath%>/script/i18n/grid.locale-cn.js"></script>
-	  
+	  <script type="text/javascript" src="<%=basePath%>/script/ajaxfileupload.js"></script>
 	  <!-- 若写成下列形式，无效果，why? -->
 	  <!-- <script type="text/javascript" src="<%=basePath%>/script/i18n/grid.locale-cn.js"/>  -->
 	  
@@ -42,7 +41,7 @@ String imageBasePath = basePath + "/images/";
 		 	$("#list").jqGrid({
 		        url:"works/listWorks.action",
 		       
-		        datatype:"json", //数据来源，本地数据
+		        datatype:"json", //从服务器返回的数据格式。
 		        mtype:"POST",//提交方式
 		        height:420,//高度，表格高度。可为数值、百分比或'auto'
 		        //width:1000,//这个宽度不能为百分比
@@ -50,19 +49,16 @@ String imageBasePath = basePath + "/images/";
 		       // cellEdit:true ,
 		        colNames:['标题', '描述', 'URL','操作'],
 		        editurl: 'works/editWorks.action',
-		       
+		       datastr: "jsonstring",
 		        colModel:[
 		           // {name:'id',index:'id', width:'10%', align:'center' },                                
 		            {name:'title',index:'title', width:'20%',align:'center',editable:true,edittype:'text'},
 		            {name:'description',index:'description', width:'15%',align:'center',editable:true},
-		            {name:'imageurl',index:'imageurl', width:'20%', align:"center"},
-		           //{name:'createdatetime',index:'createdatetime', width:'35%', align:"center", sortable:false}
-		            {name:'del',index:'del', width:'10%',align:"center", sortable:false}
+		            {name:'imageurl',index:'imageurl', width:'20%', align:"center",editable:true,},
+		           //{name:'createdatetime',index:'createdatetime', width:'35%', align:"center", sortable:false},
+		           {name:'img_url',index: 'img_url', editoptions: {enctype: "multipart/form-data"},edittype:'file',width: 50,align: "left",editable: true,formatter:showPicture}
 		        ],
 		        rownumbers:true,//添加左侧行号
-		        //altRows:true,//设置为交替行表格,默认为false
-		        //sortname:'createDate',
-		        //sortorder:'asc',
 		        viewrecords: true,//是否在浏览导航栏显示记录总数
 		        rowNum:15,//每页显示记录数
 		        rowList:[15,20,25],//用于改变显示行数的下拉列表框的元素数组。
@@ -75,7 +71,7 @@ String imageBasePath = basePath + "/images/";
 		        },
 		       pager:$('#gridPager'),
 		       caption: "My Works",//表格名称
-		       serializeEditData: 'true',
+		      // serializeEditData: 'true',
                
 		       loadComplete: function(){
 		       		var re_records = $("#list").getGridParam('records');
@@ -94,25 +90,96 @@ String imageBasePath = basePath + "/images/";
 				
 				}
 	   		 });
-	   		 
-	   		 jQuery("#ed1").click( function() {
-				jQuery("#list").jqGrid('editRow',"1");
-				this.disabled = 'true';
-				jQuery("#sved1").attr("disabled",false);
-			});
-			
-			 jQuery("#sved1").click( function() {
-				jQuery("#list").jqGrid('saveRow',"1");
-				//this.disabled = 'true';
-				//jQuery("#sved1,#cned1").attr("disabled",false);
-			});
-			
-			jQuery("#list").jqGrid('navGrid',"#gridPager",{edit:false,add:false,del:false});
-			jQuery("#list").jqGrid('inlineNav',"#gridPager");
 	   		
+	   		 
+	   		/**
+			jQuery("#del").click( function() {
+				var gr = jQuery("#list").jqGrid('getGridParam','selrow');
+				if(gr != null)
+					jQuery("#list").jqGrid('delGridRow',gr);
+				else
+					alert("请选择要删除的列");
+			});
+			*/
+			//jQuery("#list").jqGrid('navGrid',"#gridPager");
+			
+	   		
+	   		jQuery("#list").jqGrid('navGrid','#gridPager',  
+	   			{edit:true,add:true,del:true,search:true,refresh:true,view:true,addtext:'添加',edittext:' 修改',deltext:'删除',viewtext:'放大' 
+
+
+        		},
+	   			{height:280,reloadAfterSubmit:true,url:'works/editWorks.action', afterSubmit: UploadImage,closeAfterEdit:true}, //编辑 		
+	    		{height:280,reloadAfterSubmit:true,
+	        		url:'works/editWorks.action',afterSubmit: UploadImage,
+	        		closeAfterAdd:true}   //添加  		
+    	    );
+    	  //  jQuery("#list").jqGrid('inlineNav',"#gridPager");
+			
 	 });
 	 
+	 function UploadImage(response, postdata) {
+	 	alert('upload2');
+	 	
+	    var data = $.parseJSON(response.responseText);
+	    alert(data.success);
+	    if (data.success == true) {
+	        if ($("#img_url").val() != "") {
+	            ajaxFileUpload(data.id);
+	        }
+	      
+   		 }  
+
+   		 return [data.success, data.message, data.id];
+  		
+	}
 	 
+	function ajaxFileUpload(id) {
+	    $("#loading")
+	    .ajaxStart(function () {
+	        $(this).show();
+	    })
+	    .ajaxComplete(function () {
+	        $(this).hide();
+	    });
+
+	    $.ajaxFileUpload
+	    (
+	        {
+	            url: 'works/upload.action',
+	            secureuri: false,
+	            fileElementId: 'img_url',
+	            dataType: 'json',
+	            data: { id: '[id]='+id},
+	            success: function (data, status) {
+	
+	                if (typeof (data.success) != 'undefined') {
+	                    if (data.success == true) {
+	                        return;
+	                    } else {
+	                        alert(data.message);
+	                    }
+	                }
+	                else {
+	                    return alert('Failed to upload logo!');
+	                }
+	            },
+	            error: function (data, status, e) {
+	                alert(data);
+	                alert(status);
+	                alert(e);
+	                return alert('未知错误');
+	            }
+	        }
+	    )          
+    
+    }   
+    
+    
+	 function showPicture(cellvalue, options, rowObject){
+	 	return;
+		//return "<img src='http://127.0.0.1:8090/gallery/" +  rowObject.id+ "/" +cellvalue  + "' height='50' width='50' />";
+	 }
    </script>
 	   
 	  
@@ -124,14 +191,19 @@ String imageBasePath = basePath + "/images/";
 
 		<!-- jqGrid table list4 -->
 		<div class="worksTable">
+			
 			<table id="list"></table>
 			<!-- jqGrid 分页 div gridPager -->
 			<div id="gridPager"></div>
+			<div style="text-align:left">
+			<!--  <input type="button" id="del" value="Delete" /> -->
+			</div>
 		</div>
   	  	<!--  
 		<input type="button" id="ed1" value="Edit row 1" />
-		<input type="button" id="sved1" disabled='true' value="Save row 1" />
 		-->
+		
+		
   	  </div>
   </body>
 </html>

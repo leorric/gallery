@@ -37,7 +37,6 @@ public class LoginController {
 		if(list.size() == 0) {
 			return "login";
 		}
-		System.out.println("work list");
 		return "/backend/worksList";
 	}
 }

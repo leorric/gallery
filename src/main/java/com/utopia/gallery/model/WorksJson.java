@@ -2,22 +2,14 @@ package com.utopia.gallery.model;
 
 public class WorksJson {
 	
-	private Integer id;
+	private String id;
 
     private String title;
 
     private String description;
 
     private String imageurl;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
+    
 	public String getTitle() {
 		return title;
 	}
@@ -40,5 +32,13 @@ public class WorksJson {
 
 	public void setImageurl(String imageurl) {
 		this.imageurl = imageurl;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }
