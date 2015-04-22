@@ -5,7 +5,8 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String imageBasePath = basePath + "/images/";
+String imageUploadPath = basePath + "upload/";
+String imagePath = basePath + "images/";
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -100,6 +101,7 @@ String imageBasePath = basePath + "/images/";
 				font-size:16;
 		}
 	</style>
+	
   </head>
   
   <body>
@@ -111,23 +113,36 @@ String imageBasePath = basePath + "/images/";
 	    <div class="article">
 	    	<div class="description"> <c:out value="${works.title}"/> </div>
 	    	<div class="photo">
-	  	  		<img src="<%=imageBasePath%>${works.imageurl}" />
+	  	  		<img src="<%=imageUploadPath%>${works.imageurl}" />
 	  	  	</div>
 	  	  	<div class="description"><c:out value="${works.description}"/></div>
 	    </div>
 	    </c:forEach>
 	     
     </div>
+    
     <div class="rightBody">
 	    <div class="category">
 	    	Featured Posts
 	    </div>
 	    <div class="post">
-	    	<img src="<%=imageBasePath%>mybatis.jpg"/>
+	    	<!--  
+	    	<img src="<%=imagePath%>mybatis.jpg"/>
 	    	anything here..
-	    	<img src="<%=imageBasePath%>mybatis.jpg"/>
+	    	<img src="<%=imagePath%>mybatis.jpg"/>
 	    	anything here..
+	    	-->
 	    </div>
+    </div>
+    
+    <div class="leftBody" style="text-align:right;margin-bottom:50px">
+    <c:if test="${pageNum > 1}">
+    <a href="homepage.action?pageNum=${pageNum-1}"> 上一页 </a> 
+    </c:if>
+   &nbsp;&nbsp;
+   <c:if test="${pageNum < total}">
+    <a href="homepage.action?pageNum=${pageNum+1}"> 下一页 </a>
+    </c:if>
     </div>
   </body>
 </html>

@@ -10,7 +10,7 @@
 	  	
 	  	<div class="center" >
 	    <ul>
-	    	<li><a href="#">HOME</a></li>
+	    	<li><a href="homepage.action">HOME</a></li>
 	    	<li><a href="#">MY WORK</a></li>
 	    	<li><a href="#">ABOUT ME</a></li>
 	    	<li><a href="#">CONTACT ME</a></li>

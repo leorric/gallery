@@ -29,6 +29,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/login",method=POST)
 	public String processLoginForm(User user) {
+		System.out.println("user email:"+user.getEmail());
 		UserExample example = new UserExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andAccountEqualTo(user.getAccount());

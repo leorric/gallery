@@ -47,16 +47,16 @@ String imageBasePath = basePath + "/images/";
 		        //width:1000,//这个宽度不能为百分比
 		        autowidth:true,//自动宽
 		       // cellEdit:true ,
-		        colNames:['标题', '描述', 'URL','操作'],
+		        colNames:['标题', '描述', '图片名','图片'],
 		        editurl: 'works/editWorks.action',
 		       datastr: "jsonstring",
 		        colModel:[
 		           // {name:'id',index:'id', width:'10%', align:'center' },                                
 		            {name:'title',index:'title', width:'20%',align:'center',editable:true,edittype:'text'},
-		            {name:'description',index:'description', width:'15%',align:'center',editable:true},
-		            {name:'imageurl',index:'imageurl', width:'20%', align:"center",editable:true,},
+		            {name:'description',index:'description', width:'65%',align:'center',editable:true,edittype:'textarea'},
+		            {name:'imageurl',index:'imageurl', width:'10%', editable: true},
 		           //{name:'createdatetime',index:'createdatetime', width:'35%', align:"center", sortable:false},
-		           {name:'img_url',index: 'img_url', editoptions: {enctype: "multipart/form-data"},edittype:'file',width: 50,align: "left",editable: true,formatter:showPicture}
+		            {name:'img_url',index: 'img_url', editoptions: {enctype: "multipart/form-data"},edittype:'file',width: 50,align: "left",editable: true,formatter:showPicture}
 		        ],
 		        rownumbers:true,//添加左侧行号
 		        viewrecords: true,//是否在浏览导航栏显示记录总数
@@ -71,8 +71,6 @@ String imageBasePath = basePath + "/images/";
 		        },
 		       pager:$('#gridPager'),
 		       caption: "My Works",//表格名称
-		      // serializeEditData: 'true',
-               
 		       loadComplete: function(){
 		       		var re_records = $("#list").getGridParam('records');
 		       },
@@ -105,12 +103,9 @@ String imageBasePath = basePath + "/images/";
 			
 	   		
 	   		jQuery("#list").jqGrid('navGrid','#gridPager',  
-	   			{edit:true,add:true,del:true,search:true,refresh:true,view:true,addtext:'添加',edittext:' 修改',deltext:'删除',viewtext:'放大' 
-
-
-        		},
-	   			{height:280,reloadAfterSubmit:true,url:'works/editWorks.action', afterSubmit: UploadImage,closeAfterEdit:true}, //编辑 		
-	    		{height:280,reloadAfterSubmit:true,
+	   			{edit:true,add:true,del:true,search:true,refresh:true,view:true,addtext:'添加',edittext:' 修改',deltext:'删除',viewtext:'放大'},
+	   			{height:380,reloadAfterSubmit:true,url:'works/editWorks.action', afterSubmit: UploadImage,closeAfterEdit:true}, //编辑 		
+	    		{height:380,reloadAfterSubmit:true,
 	        		url:'works/editWorks.action',afterSubmit: UploadImage,
 	        		closeAfterAdd:true}   //添加  		
     	    );
@@ -119,10 +114,8 @@ String imageBasePath = basePath + "/images/";
 	 });
 	 
 	 function UploadImage(response, postdata) {
-	 	alert('upload2');
-	 	
+
 	    var data = $.parseJSON(response.responseText);
-	    alert(data.success);
 	    if (data.success == true) {
 	        if ($("#img_url").val() != "") {
 	            ajaxFileUpload(data.id);
@@ -152,7 +145,6 @@ String imageBasePath = basePath + "/images/";
 	            dataType: 'json',
 	            data: { id: '[id]='+id},
 	            success: function (data, status) {
-	
 	                if (typeof (data.success) != 'undefined') {
 	                    if (data.success == true) {
 	                        return;
@@ -165,6 +157,7 @@ String imageBasePath = basePath + "/images/";
 	                }
 	            },
 	            error: function (data, status, e) {
+	            	//alert('re:'+data.success);
 	                alert(data);
 	                alert(status);
 	                alert(e);
@@ -177,8 +170,7 @@ String imageBasePath = basePath + "/images/";
     
     
 	 function showPicture(cellvalue, options, rowObject){
-	 	return;
-		//return "<img src='http://127.0.0.1:8090/gallery/" +  rowObject.id+ "/" +cellvalue  + "' height='50' width='50' />";
+		return "<img src='http://127.0.0.1:8080/gallery/upload/" +  rowObject.imageurl  + "' height='50' width='50' />";
 	 }
    </script>
 	   

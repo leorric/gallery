@@ -190,6 +190,16 @@ jQuery.extend({
             jQuery.globalEval( data );
         // Get the JavaScript object, if JSON is used.
         if ( type == "json" )
+        	//added by youjj
+        	data = r.responseText;
+             var start = data.indexOf(">");
+             if(start != -1) {
+               var end = data.indexOf("<", start + 1);
+               if(end != -1) {
+                 data = data.substring(start + 1, end);
+                }
+             }
+             // end
             eval( "data = " + data );
         // evaluate scripts within html
         if ( type == "html" )

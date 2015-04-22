@@ -60,6 +60,7 @@ public class WorksController {
 		works.setTitle(worksJson.getTitle());
 		works.setDescription(worksJson.getDescription());
 		works.setImageurl(worksJson.getImageurl());
+		System.out.println("image:"+worksJson.getImageurl());
 		int id = 0;
 		try {
 			id = Integer.parseInt(worksJson.getId());
@@ -104,20 +105,13 @@ public class WorksController {
 		    	filename = filevalue.substring(findex+10);
 		    	filename = filename.replaceAll("\"", "");
 		    	filename = filename.replaceAll("\r\n", "");
-		    	System.out.println(filename);
+		    	System.out.println("file:"+filename);
 		    	break;
 		    }
 			
 		}
 		
 		String filepath=request.getSession().getServletContext().getRealPath("upload/");
-		//String filepath = this.getServletContext().getRealPath("")+java.io.File.separator+"picture"+java.io.File.separator+id+java.io.File.separator;
-
-		
-		
-
-		//filename = "east.jpg";
-		System.out.println(filename);
 		byte[] backup = new byte[4048];
 		int times = 0;
 		try {
@@ -136,7 +130,17 @@ public class WorksController {
 				
 			    int j = filevalue.lastIndexOf("Content-Type");
 			    end = filevalue.endsWith("--\r\n");
-			   System.out.println("read:"+filevalue);
+			    int findex = filevalue.indexOf("filename");
+				//System.out.println("line:"+filevalue);
+			    if(findex != -1) {
+			    	
+			    	filename = filevalue.substring(findex+10);
+			    	filename = filename.replaceAll("\"", "");
+			    	filename = filename.replaceAll("\r\n", "");
+			    	System.out.println(filename);
+			    	continue;
+			    }
+			   //System.out.println("read:"+filevalue);
 			   //System.out.println("backup:"+new String(backup));
 			    
 			    if (j!=-1) {
@@ -149,17 +153,10 @@ public class WorksController {
 				}
 			    
 			    if(end) {
-			    	//System.out.println("last:"+filevalue);
-			    	if(times > 1) {
-			    		//System.out.println("line2:"+new String(backup,0,mark)+"|");
-			    		fileStream.write(backup, 0, mark-2);
-			    	}
+			    	fileStream.write(backup, 0, mark-2);
 			    	break;
 			    }else {
-			    	if(times > 1){
-			    		//System.out.println("line:"+new String(backup,0,mark));
-			    		fileStream.write(backup, 0, mark);
-			    	}
+			    	fileStream.write(backup, 0, mark);
 			    }
 			    //System.arraycopy(buf, 0, backup, 0, len);
 			    for(int m=0;m<backup.length;m++){
