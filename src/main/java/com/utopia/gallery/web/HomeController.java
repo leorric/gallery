@@ -43,4 +43,11 @@ public class HomeController {
 		model.addAttribute("total", pageInfo.getTotal());
 		return "fakeSmith";
 	}
+	
+	@RequestMapping(value="/displayArts",method=GET)
+	public String displayArtsThumbnail(Model model) {
+		List<Works> list = worksService.selectByExample(null);
+		model.addAttribute(list);
+		return "front/artOverview";
+	}
 }
